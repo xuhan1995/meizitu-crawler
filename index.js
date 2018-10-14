@@ -47,10 +47,8 @@ const handleAlum = async (album, callback) => {
       chalk.magenta(`${cachePath} => 已经全部下载成功`)
     )
   }
-  setTimeout(() => {
-    complicatingNum--
-    callback(null)
-  }, 0)
+  complicatingNum--
+  callback(null)
 }
 
 main(baseUrl + nowPageNum)
