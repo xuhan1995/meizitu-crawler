@@ -28,29 +28,22 @@ module.exports = {
     }
   },
 
-  createAlbumDir: async (album, nowPageNum) => {
+  createAlbumDir: (album, nowPageNum) => {
     const cachePath = basePath + album.name
     if (fs.existsSync(cachePath)) {
       console.log(
         chalk.red(`第${nowPageNum}页=>文件"${cachePath}"已存在`)
       )
       const albumPath = path.resolve(cachePath)
-      const repeat = await new Promise((resolve, reject) => {
-        fs.readdir(albumPath, (err, files) => {
-          if (err) {
-            throw err
-            reject()
-          }
-          let count = 0
-          files.forEach((filename) => {
-            const file = path.join(albumPath, filename)
-            count++
-            console.log(file)
-            console.log(count)
-          })
-          resolve(count)
-        })
+      let count = 0
+      files = fs.readdirSync(albumPath)
+      files.forEach((filename) => {
+        const file = path.join(albumPath, filename)
+        count++
+        console.log(file)
+        console.log(count)
       })
+      const repeat = count
       console.log('======================================', repeat)
       return [true, cachePath, repeat]
     }else{
@@ -70,7 +63,8 @@ module.exports = {
         fs.rmdirSync(cachePath)
         return 0
       }
-      return $('.pagenavi span')[len - 2].children[0].data
+      console.log(11111111111111111111111111111111111111111)
+      return Number($('.pagenavi span')[len - 2].children[0].data)
     } catch (error) {
       throw error
     }
@@ -85,23 +79,15 @@ module.exports = {
     }
   },
 
-  rmCachePath: async (cachePath, repeat) => {
+  rmCachePath: (cachePath, repeat) => {
     const albumPath = path.resolve(cachePath)
     if (repeat) {
-      return await new Promise((resolve, reject) => {
-        fs.readdir(albumPath, (err, files) => {
-          if (err) {
-            throw err
-            reject()
-          }
-          files.forEach((filename) => {
-              const filePath = path.join(albumPath, filename)
-              fs.unlinkSync(`${filePath}`)
-          })
-          fs.rmdirSync(albumPath)
-          resolve('文件夹删除完毕')
-        })
+      files = fs.readdirSync(albumPath)
+      files.forEach((filename) => {
+          const filePath = path.join(albumPath, filename)
+          fs.unlinkSync(`${filePath}`)
       })
+      fs.rmdirSync(albumPath)
     }
     fs.rmdirSync(albumPath)
   },
