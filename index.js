@@ -1,9 +1,10 @@
 const utils = require('./utils')
 const async = require('async')
+const chalk = require('chalk')
 
 const baseUrl = 'http://www.mzitu.com/page/'
 let nowPageNum = 1 
-const endPageNum = 2
+const endPageNum = 6
 let complicatingNum = 0
 
 const main = async url => {
@@ -20,10 +21,11 @@ const downloadAlbums = albumsInfo => {
     if (err) {
       throw err
     }
+    nowPageNum++
     if (nowPageNum <= endPageNum) {
-      nowPageNum++
+      main(baseUrl + nowPageNum)
     }
-    main(baseUrl + nowPageNum)
+    return
   })
 }
 
@@ -33,19 +35,17 @@ const handleAlum = async (album, callback) => {
   let [exist, cachePath, repeat] = utils.createAlbumDir(album, nowPageNum)
   const res = await utils.getPageResponse(album.url)
   const imgNums = utils.getImgNums(res, cachePath)
-  if (!exist) {
-    // utils.rmCachePath(cachePath, repeat)
-    album.imgs = []
+  if (repeat !== imgNums) {
+    utils.rmCachePath(cachePath, repeat, imgNums)
     for (let i = 1; i <= imgNums; i++) {
       const res = await utils.getPageResponse(`${album.url}/${i}`)
       const imgUrl = utils.getImgUrl(res)
-      const obj = {
-        number : i,
-        imgUrl
-      }
-      album.imgs.push(obj)
       await utils.downloadImg(`${album.url}/${i}`, imgUrl, cachePath, i)  //await保证一次爬取5张图片
     }
+  }else {
+    console.log(
+      chalk.magenta(`${cachePath} => 已经全部下载成功`)
+    )
   }
   setTimeout(() => {
     complicatingNum--
