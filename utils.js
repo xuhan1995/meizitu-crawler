@@ -63,7 +63,6 @@ module.exports = {
         fs.rmdirSync(cachePath)
         return 0
       }
-      console.log(11111111111111111111111111111111111111111)
       return Number($('.pagenavi span')[len - 2].children[0].data)
     } catch (error) {
       throw error
