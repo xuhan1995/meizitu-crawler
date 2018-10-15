@@ -38,7 +38,6 @@ module.exports = {
       let count = 0
       files = fs.readdirSync(albumPath)
       files.forEach((filename) => {
-        const file = path.join(albumPath, filename)
         count++
       })
       const alreadyDownload = count
