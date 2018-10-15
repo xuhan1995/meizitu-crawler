@@ -30,11 +30,11 @@ const downloadAlbums = albumsInfo => {
 const handleAlum = async (album, callback) => {
   complicatingNum++
   console.log(`现在的并发数是${complicatingNum},正在爬取${album.url}`)
-  let [exist, cachePath, repeat] = utils.createAlbumDir(album, nowPageNum)
+  let [cachePath, alreadyDownload] = utils.createAlbumDir(album, nowPageNum)
   const res = await utils.getPageResponse(album.url)
   const imgNums = utils.getImgNums(res, cachePath)
-  if (repeat !== imgNums) {
-    utils.rmCachePath(cachePath, repeat, imgNums)
+  if (alreadyDownload !== imgNums) {
+    utils.rmCachePath(cachePath, alreadyDownload, imgNums)
     for (let i = 1; i <= imgNums; i++) {
       const res = await utils.getPageResponse(`${album.url}/${i}`)
       const imgUrl = utils.getImgUrl(res)

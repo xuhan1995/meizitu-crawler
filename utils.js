@@ -41,14 +41,14 @@ module.exports = {
         const file = path.join(albumPath, filename)
         count++
       })
-      const repeat = count
-      return [true, cachePath, repeat]
+      const alreadyDownload = count
+      return [cachePath, alreadyDownload]
     }else{
       fs.mkdirSync(cachePath)
       console.log(
         chalk.yellow(`第${nowPageNum}页=>文件夹"${cachePath}"创建成功`)
       )
-      return [false, cachePath, 0]
+      return [cachePath, 0]
     }
   },
 
@@ -78,15 +78,15 @@ module.exports = {
     }
   },
 
-  rmCachePath: (cachePath, repeat, imgNums) => {
+  rmCachePath: (cachePath, alreadyDownload, imgNums) => {
     const albumPath = path.resolve(cachePath)
-    if (repeat) {  //不为0说明没下载完，需要删除所有图片
+    if (alreadyDownload) {  //不为0说明没下载完，需要删除所有图片
       files = fs.readdirSync(albumPath)
       files.forEach((filename) => {
           const filePath = path.join(albumPath, filename)
           fs.unlinkSync(`${filePath}`)
           console.log(
-            chalk.blue(`${cachePath} => 有${repeat}张，应有${imgNums}张,删除成功`)
+            chalk.blue(`${cachePath} => 有${alreadyDownload}张，应有${imgNums}张,删除成功`)
           )
       })
     }
