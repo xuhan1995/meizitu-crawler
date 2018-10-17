@@ -29,7 +29,7 @@ module.exports = {
   },
 
   createAlbumDir: (album, nowPageNum) => {
-    const cachePath = basePath + album.name
+    const cachePath = basePath + album.name.replace(/\:|\?|"|\/|\*|\\|\||<|>|/g, '')
     if (fs.existsSync(cachePath)) {
       console.log(
         chalk.red(`第${nowPageNum}页=>文件"${cachePath}"已存在`)
