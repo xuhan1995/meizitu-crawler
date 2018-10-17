@@ -33,7 +33,7 @@ const handleAlum = async (album, callback) => {
   let [cachePath, alreadyDownload] = utils.createAlbumDir(album, nowPageNum)
   const res = await utils.getPageResponse(album.url)
   const imgNums = utils.getImgNums(res, cachePath)
-  if (alreadyDownload !== imgNums) {
+  if (alreadyDownload < imgNums) {
     utils.rmCachePath(cachePath, alreadyDownload, imgNums)
     for (let i = 1; i <= imgNums; i++) {
       const res = await utils.getPageResponse(`${album.url}/${i}`)
