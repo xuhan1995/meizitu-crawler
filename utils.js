@@ -8,17 +8,17 @@ const basePath = './albums/'
 
 module.exports = {
   getPageResponse: async url => {
-    return await rp({ url })
+    return await rp({url})
   },
 
   getAlbumUrls: res => {
     try {
       const $ = cheerio.load(res)
       const albumsInfo = []
-      $('#pins img').each((i, e) => {
+      $('#pins span a').each((i, e) => {
         const album = {
-          name: e.attribs.alt,
-          url: e.parent.attribs.href
+          name: e.children[0].data,
+          url: e.attribs.href
         }
         albumsInfo.push(album)
       })
